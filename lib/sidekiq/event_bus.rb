@@ -1,0 +1,2 @@
+module Sidekiq::EventBus
+end
