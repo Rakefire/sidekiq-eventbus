@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'sidekiq-eventbus'
-  s.version     = '0.0.3'
+  s.version     = '0.0.4'
   s.date        = '2017-01-21'
   s.summary     = 'Producer/Consumer event bus via Sidekiq'
   s.description = "A simple asynchronous Producer/Consumer event bus extension for Sidekiq"
