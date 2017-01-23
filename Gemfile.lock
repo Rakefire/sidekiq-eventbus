@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    sidekiq-eventbus (0.0.2)
-      sidekiq
+    sidekiq-eventbus (0.0.3)
+      sidekiq (>= 4.0.0, < 5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -37,7 +37,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rspec
+  rspec (>= 3.5.0, < 4.0)
   sidekiq-eventbus!
 
 BUNDLED WITH
