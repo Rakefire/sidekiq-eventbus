@@ -24,19 +24,19 @@ class Sidekiq::EventBus::Consumer
 
 
   def consume topic, event, payload
-    _payload = payload.merge('topic'.freeze => topic, 'event'.freeze => event).freeze
+    if self.class.handlers.key? event
+      _payload = payload.merge('topic'.freeze => topic, 'event'.freeze => event).freeze
 
-    self.class.handlers[event].each do |handler|
-      begin
-        if handler.is_a? Proc
-          instance_exec( _payload.dup, &handler )
-        else
-          handler.call( _payload.dup )
+      self.class.handlers[event].each do |handler|
+        begin
+          if handler.is_a? Proc
+            instance_exec( _payload.dup, &handler )
+          else
+            handler.call( _payload.dup )
+          end
+        rescue => e
+          Sidekiq::EventBus.utils.handle_error(e)
         end
-      rescue => e
-        puts "OH NO!!!"
-        puts e.inspect
-        puts e.backtrace
       end
     end
   end

@@ -1,5 +1,6 @@
 class Sidekiq::EventBus::Configuration
-  attr_accessor :adapter, :consumers, :sidekiq_worker_options
+  attr_accessor :adapter, :consumers, :sidekiq_worker_options, :error_handler
+
   def initialize
     self.adapter                = Sidekiq::EventBus::Adapters::Default.new
     self.consumers              = Hash.new { |hash, key| hash[key] = Set.new }

@@ -16,4 +16,10 @@ class Sidekiq::EventBus::Utils
       consumer.consume(topic, event, payload)
     end
   end
+
+  def handle_error exception
+    unless config.error_handler.nil?
+      config.error_handler.call(exception)
+    end
+  end
 end
