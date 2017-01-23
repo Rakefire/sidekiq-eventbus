@@ -1,7 +1,7 @@
 class Sidekiq::EventBus::Producer
   attr_reader :topics, :adapter
 
-  def initialize topics: nil, adapter: Sidekiq::EventBus.config.adapter
+  def initialize topics:, adapter: Sidekiq::EventBus.config.adapter
     @topics  = Array(topics)
     @adapter = adapter
   end
