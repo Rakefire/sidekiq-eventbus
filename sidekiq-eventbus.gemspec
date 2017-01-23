@@ -9,4 +9,7 @@ Gem::Specification.new do |s|
   s.files       = Dir["CHANGELOG.md", "MIT-LICENSE", "README.md", "lib/**/*"]
   s.homepage    = 'https://github.com/Rakefire/sidekiq-eventbus'
   s.license     = 'MIT'
+
+  s.add_dependency 'sidekiq'
+  s.add_development_dependency 'rspec'
 end
