@@ -22,10 +22,15 @@ class Sidekiq::EventBus::Consumer
     end
   end
 
+  PAYLOAD_WITH_INDIFFERENT_ACCESS = defined?(ActiveSupport::HashWithIndifferentAccess)
 
   def consume topic, event, payload
     if self.class.handlers.key? event
       _payload = payload.merge('topic'.freeze => topic, 'event'.freeze => event).freeze
+
+      if PAYLOAD_WITH_INDIFFERENT_ACCESS
+        _payload = ActiveSupport::HashWithIndifferentAccess.new(_payload)
+      end
 
       self.class.handlers[event].each do |handler|
         begin
