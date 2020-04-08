@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/Rakefire/sidekiq-eventbus'
   s.license     = 'MIT'
 
-  s.add_dependency('sidekiq', ['>= 4.0.0', '< 5.0'])
+  s.add_dependency('concurrent-ruby', ['>= 1.0.0', '< 2.0'])
+  s.add_dependency('sidekiq', ['>= 4.0.0', '< 7.0'])
   s.add_development_dependency('rspec', ['>= 3.5.0', '< 4.0'])
 end
