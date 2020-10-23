@@ -5,15 +5,15 @@ class Sidekiq::EventBus::Utils
     @config = config
   end
 
-  def consumers_for topic
-    config.consumers[topic].map do |klass_name|
+  def consumers
+    config.consumers.map do |klass_name|
       klass_name.constantize.new
     end
   end
 
-  def handle_event topic, event, payload
-    consumers_for(topic).each do |consumer|
-      consumer.consume(topic, event, payload)
+  def handle_event event, payload
+    consumers.each do |consumer|
+      consumer.consume(event, payload)
     end
   end
 

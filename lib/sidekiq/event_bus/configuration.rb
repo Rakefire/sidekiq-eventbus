@@ -3,12 +3,12 @@ class Sidekiq::EventBus::Configuration
 
   def initialize
     self.adapter                = Sidekiq::EventBus::Adapters::Default.new
-    self.consumers              = Hash.new { |hash, key| hash[key] = Set.new }
+    self.consumers              = Set.new
     self.sidekiq_worker_options = { retry: 0, dead: true }
   end
 
-  def register_consumer topic, klass
+  def register_consumer klass
     klass = klass.name unless klass.is_a?(String)
-    consumers[topic] << klass
+    consumers << klass
   end
 end

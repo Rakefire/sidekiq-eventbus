@@ -8,7 +8,6 @@ module Sidekiq
     autoload :Consumer,         'sidekiq/event_bus/consumer'
     autoload :Producer,         'sidekiq/event_bus/producer'
 
-    autoload :TopicMiddleware,  'sidekiq/event_bus/topic_middleware'
     autoload :EventWorker,      'sidekiq/event_bus/event_worker'
 
     module Adapters
@@ -30,11 +29,5 @@ module Sidekiq
     def self.configure
       yield(config) if block_given?
     end
-  end
-end
-
-Sidekiq.configure_server do |config|
-  config.server_middleware do |chain|
-    chain.add Sidekiq::EventBus::TopicMiddleware
   end
 end

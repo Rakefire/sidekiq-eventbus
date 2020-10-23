@@ -1,11 +1,7 @@
 class Sidekiq::EventBus::Consumer
-  # Register Consumer with the EventBus for a particular topic
-  def self.topic *topics
-    Array(topics).each do |topic|
-      Sidekiq::EventBus.config.register_consumer(topic, self)
-    end
+  def self.register_consumer!
+    Sidekiq::EventBus.config.register_consumer(self)
   end
-
 
   # Store handlers for this consumer
   def self.handlers
@@ -24,9 +20,9 @@ class Sidekiq::EventBus::Consumer
 
   PAYLOAD_WITH_INDIFFERENT_ACCESS = defined?(ActiveSupport::HashWithIndifferentAccess)
 
-  def consume topic, event, payload
+  def consume event, payload
     if self.class.handlers.key? event
-      _payload = payload.merge('topic'.freeze => topic, 'event'.freeze => event).freeze
+      _payload = payload.merge('event'.freeze => event).freeze
 
       if PAYLOAD_WITH_INDIFFERENT_ACCESS
         _payload = ActiveSupport::HashWithIndifferentAccess.new(_payload)

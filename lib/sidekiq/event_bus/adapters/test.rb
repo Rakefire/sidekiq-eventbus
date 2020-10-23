@@ -1,14 +1,13 @@
 class Sidekiq::EventBus::Adapters::Test
-  attr_accessor :topics
+  attr_accessor :events
 
   def initialize
-    self.topics = Hash.new{ |hash, key| hash[key] = [] }
+    self.events = []
   end
 
-  def push topic, event, payload
+  def push event, payload
     id = SecureRandom.hex(8)
-    self.topics[topic].push({
-      topic:    topic,
+    self.events.push({
       event:    event,
       payload:  payload,
       id:       id
@@ -18,6 +17,6 @@ class Sidekiq::EventBus::Adapters::Test
   end
 
   def clear!
-    self.topics.clear
+    self.events.clear
   end
 end

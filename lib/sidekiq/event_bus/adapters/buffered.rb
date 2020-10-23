@@ -6,12 +6,12 @@ class Sidekiq::EventBus::Adapters::Buffered
     @bufferes = Concurrent::Map.new
   end
 
-  def push topic, event, payload
+  def push event, payload
     if is_buffered?
-      event_buffer << [ topic, event, payload ]
+      event_buffer << [ event, payload ]
       nil
     else
-      @adapter.push(topic, event, payload)
+      @adapter.push(event, payload)
     end
   end
 
@@ -38,8 +38,8 @@ class Sidekiq::EventBus::Adapters::Buffered
   end
 
   def flush!
-    event_buffer.map do |topic, event, payload|
-      @adapter.push(topic, event, payload)
+    event_buffer.map do |event, payload|
+      @adapter.push(event, payload)
     end
   end
 

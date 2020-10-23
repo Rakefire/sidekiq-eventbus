@@ -1,25 +1,26 @@
 require 'spec_helper'
 
 describe Sidekiq::EventBus::Consumer do
+  context '.register_consumer!' do
+    it 'does not register the consumer until register_consumer! is called' do
+      config = Sidekiq::EventBus::Configuration.new
+      allow(Sidekiq::EventBus).to receive(:config) { config }
 
-  context '::topic' do
-    subject { Class.new(Sidekiq::EventBus::Consumer) }
-    it 'registers the class for a topic' do
-      topic = "test-topic"
-      config = double(:config)
+      expect(config.consumers).to be_empty
 
-      expect(Sidekiq::EventBus).to receive(:config) { config }
-      expect(config).to receive(:register_consumer).with(topic, subject)
+      stub_const('TestConsumer', Class.new(Sidekiq::EventBus::Consumer))
+      expect(config.consumers).to be_empty
 
-      subject.topic(topic)
+      TestConsumer.register_consumer!
+      expect(config.consumers).to include('TestConsumer')
     end
   end
 
-
-
-
   context '#consume' do
-    let(:topic)   { "test" }
+    after(:each) do
+      Sidekiq::EventBus.config.consumers.clear
+    end
+
     let(:payload) { double(:payload) }
 
     let(:object_handler) { double(:obj_handler) }
@@ -59,10 +60,10 @@ describe Sidekiq::EventBus::Consumer do
       let(:event)   { "block.event" }
 
       it "calls the block" do
-        expect(payload).to receive(:merge).with({ 'event' => event, 'topic' => topic }).and_return(payload)
+        expect(payload).to receive(:merge).with({ 'event' => event }).and_return(payload)
         expect(payload).to receive(:verify_block)
 
-        subject.consume(topic, event, payload)
+        subject.consume(event, payload)
       end
     end
 
@@ -71,10 +72,10 @@ describe Sidekiq::EventBus::Consumer do
       let(:event)    { "object.event" }
 
       it "calls handler object" do
-        expect(payload).to receive(:merge).with({ 'event' => event, 'topic' => topic }).and_return(payload)
+        expect(payload).to receive(:merge).with({ 'event' => event }).and_return(payload)
         expect(object_handler).to receive(:call).with(payload)
 
-        subject.consume(topic, event, payload)
+        subject.consume(event, payload)
       end
     end
 
@@ -83,7 +84,7 @@ describe Sidekiq::EventBus::Consumer do
       let(:event)   { "unknown.event" }
 
       it "doesn't do anything" do
-        subject.consume(topic, event, payload)
+        subject.consume(event, payload)
       end
     end
 
@@ -92,12 +93,12 @@ describe Sidekiq::EventBus::Consumer do
       let(:event)   { "raise.event" }
 
       it "calls the error handler" do
-        expect(payload).to receive(:merge).with({ 'event' => event, 'topic' => topic }).and_return(payload)
+        expect(payload).to receive(:merge).with({ 'event' => event }).and_return(payload)
         expect(utils).to receive(:handle_error) do |e|
           expect(e).to be(raised_error)
         end
 
-        subject.consume(topic, event, payload)
+        subject.consume(event, payload)
       end
     end
   end

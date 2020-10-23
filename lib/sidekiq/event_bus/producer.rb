@@ -1,14 +1,11 @@
 class Sidekiq::EventBus::Producer
-  attr_reader :topics, :adapter
+  attr_reader :adapter
 
-  def initialize topics:, adapter: Sidekiq::EventBus.config.adapter
-    @topics  = Array(topics)
+  def initialize adapter: Sidekiq::EventBus.config.adapter
     @adapter = adapter
   end
 
   def publish event, payload
-    topics.map do |topic|
-      adapter.push topic, event, payload
-    end
+    adapter.push event, payload
   end
 end
