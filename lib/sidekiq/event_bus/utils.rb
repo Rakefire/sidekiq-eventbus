@@ -1,12 +1,6 @@
 class Sidekiq::EventBus::Utils
-  attr_reader :config
-
-  def initialize config
-    @config = config
-  end
-
   def consumers
-    config.consumers.map do |klass_name|
+    Sidekiq::EventBus.config.consumers.map do |klass_name|
       klass_name.constantize.new
     end
   end
@@ -18,8 +12,8 @@ class Sidekiq::EventBus::Utils
   end
 
   def handle_error exception
-    unless config.error_handler.nil?
-      config.error_handler.call(exception)
+    unless Sidekiq::EventBus.config.error_handler.nil?
+      Sidekiq::EventBus.config.error_handler.call(exception)
     end
   end
 end

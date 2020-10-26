@@ -23,7 +23,7 @@ module Sidekiq
     end
 
     def self.utils
-      @utils ||= Utils.new(config)
+      @utils ||= Utils.new
     end
 
     def self.configure
