@@ -11,7 +11,7 @@ GEM
     concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     diff-lcs (1.4.4)
-    rack (2.2.3)
+    rack (2.2.6.4)
     redis (4.2.2)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
